@@ -124,16 +124,35 @@ if __name__ == '__main__':
     vk = VkUrl()
 
     photo_list = (vk.get_photo_f_profile('668524'))
+    pprint(photo_list)
     files_list = list()
+    files_dict = {}
     if photo_list != "Error":
-        files_list = list([(max(photo['sizes'], key=lambda size: int(size['width'])))['url'] for photo in photo_list])
+        """
+            [{
+            "file_name": "34.jpg",
+            "size": "z"
+            }]
+        """
+        for photo in photo_list:
+            max_photo = max(photo['sizes'], key=lambda size: int(size['width']))
+            files_list.append({'file_name': f"{photo['likes']['count']}.jpeg",
+                               'url': max_photo['url'],
+                               'size': max_photo['type']})
+            # print(photo['likes']['count'])
+
         pprint(files_list)
-        counter = 0
-        for f in files_list:
-            r = requests.get(f)
-            counter += 1
-            with open(f'{counter}.jpg', 'wb') as f:
-                f.write(r.content)
+
+
+
+        # files_list = list([(max(photo['sizes'], key=lambda size: int(size['width'])))['url'] for photo in photo_list])
+        # pprint(files_list)
+        # counter = 0
+        # for f in files_list:
+        #     r = requests.get(f)
+        #     counter += 1
+        #     with open(f'{counter}.jpg', 'wb') as f:
+        #         f.write(r.content)
 
     else:
         print(photo_list)
