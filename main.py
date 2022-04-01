@@ -87,13 +87,13 @@ class VkUrl:
 
         return result.json()
 
-    def get_photo_f_profile(self, user_id: str) -> dict:
+    def get_photo_f_profile(self, user_id: str) -> dict | str:
 
         """
         https://vk.com/dev/photos.get?params[owner_id]=-1&params[album_id]=wall&params[rev]=0&params[extended]=0
         &params[photo_sizes]=0&params[count]=2&params[v]=5.77
         :param user_id:
-        :return: dict
+        :return: dict or str
         """
 
         owner_id = '-' + user_id
@@ -110,17 +110,26 @@ class VkUrl:
                               timeout=5)
 
         print(result)
+        pprint(result.json())
 
-        return result.json()
+        if result.status_code == 200 and 'error' not in result.json():
+            return result.json()['response']['items']
+        else:
+            return f"Error"
+
 
 
 if __name__ == '__main__':
 
     vk = VkUrl()
 
-    pprint(vk.get_photo_f_profile('668524'))
+    photo_list = (vk.get_photo_f_profile('668524'))
+    if photo_list != "Error":
+        pprint(list([(max(photo['sizes'], key=lambda size: int(size['width'])))['url'] for photo in photo_list]))
+    else:
+        print(photo_list)
 
-    pprint(vk.get_personal_data('668524'))
+    # pprint(vk.get_personal_data('668524'))
     # pprint(vk.search_groups('Python'))
     #
     # search_gr_res = vk.search_groups('Berloga')
