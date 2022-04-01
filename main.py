@@ -2,7 +2,7 @@ import time
 # import BeautifulSoup
 import requests
 from pprint import pprint
-
+import dload
 
 class VkUrl:
     url_ = "https://api.vk.com/method/"
@@ -124,10 +124,20 @@ if __name__ == '__main__':
     vk = VkUrl()
 
     photo_list = (vk.get_photo_f_profile('668524'))
+    files_list = list()
     if photo_list != "Error":
-        pprint(list([(max(photo['sizes'], key=lambda size: int(size['width'])))['url'] for photo in photo_list]))
+        files_list = list([(max(photo['sizes'], key=lambda size: int(size['width'])))['url'] for photo in photo_list])
+        pprint(files_list)
+        counter = 0
+        for f in files_list:
+            r = requests.get(f)
+            counter += 1
+            with open(f'{counter}.jpg', 'wb') as f:
+                f.write(r.content)
+
     else:
         print(photo_list)
+
 
     # pprint(vk.get_personal_data('668524'))
     # pprint(vk.search_groups('Python'))
