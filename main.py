@@ -8,19 +8,38 @@ class VkUrl:
     url_ = "https://api.vk.com/method/"
 
     def __init__(self):
-        with open('token.txt', 'r') as tfile:
+        """
+        Here program takes the TOKEN
+        """
+        with open('my_token.txt', 'r') as tfile:
             self.TOKEN = tfile.read().strip()
             print(f'TOKEN: {self.TOKEN}')
 
     def get_url(self, method: str):
+        """
+        This method just merge an default url and http method name.
+        :param method:
+        :return:
+        """
         return self.url_ + method
 
     def get_params(self, fields: str, pdict: dict):
+        """
+        This method just merge http request parameters.
+        :param fields:
+        :param pdict:
+        :return:
+        """
         return {'access_token': self.TOKEN,
-                'v': '5.131',
+                'v': '5.81',
                 'fields': fields} | pdict
 
     def search_groups(self, gr_name: str, sorting=0):
+        """
+        :param gr_name:
+        :param sorting:
+        :return:
+        """
         result = requests.get(self.get_url(method="groups.search"),
                               params=self.get_params(
                                   fields='',
@@ -34,6 +53,11 @@ class VkUrl:
         return result
 
     def search_groups_by_id(self, sorting=0, *list_):
+        """
+        :param sorting:
+        :param list_:
+        :return:
+        """
         result = requests.get(self.get_url(method="groups.getById"),
                               params=self.get_params(
                                   fields='members_count,activity,description',
@@ -49,37 +73,67 @@ class VkUrl:
         return result
 
     def get_personal_data(self, user_id: str):
+        """
+        :param user_id:
+        :return: json()
+        """
         result = requests.get(self.get_url(method="users.get"),
                               params=self.get_params(
                                   fields='education,photo_400_orig,contacts',
                                   pdict={'user_ids': user_id}),
                               timeout=5)
 
+        # print(result)
+
+        return result.json()
+
+    def get_photo_f_profile(self, user_id: str) -> dict:
+
+        """
+        https://vk.com/dev/photos.get?params[owner_id]=-1&params[album_id]=wall&params[rev]=0&params[extended]=0
+        &params[photo_sizes]=0&params[count]=2&params[v]=5.77
+        :param user_id:
+        :return: dict
+        """
+
+        owner_id = '-' + user_id
+        print(owner_id)
+
+        result = requests.get(self.get_url(method="photos.get"),
+                              params=self.get_params(
+                                  fields='',
+                                  pdict={'owner_id': user_id,
+                                         'album_id': 'wall',
+                                         'count': '200',
+                                         'photo_sizes': '1',
+                                         'extended': '1'}),
+                              timeout=5)
+
         print(result)
 
-        result = result.json()  # ['response'][0]
-
-        return result
-
-    def get_photo_profile(self, user_id: str) -> str:
-        return "Ok"
+        return result.json()
 
 
 if __name__ == '__main__':
 
     vk = VkUrl()
 
-    pprint(vk.get_personal_data('id668524'))
-    # pprint(search_groups('Python'))
+    pprint(vk.get_photo_f_profile('668524'))
 
-    search_gr_res = vk.search_groups('Berloga')
-    target_group_list = []
+    pprint(vk.get_personal_data('668524'))
+    # pprint(vk.search_groups('Python'))
     #
-    print(result['screen_name'] for result in search_gr_res)
+    # search_gr_res = vk.search_groups('Berloga')
+    # target_group_list = []
+    # #
+    # print(result['screen_name'] for result in search_gr_res)
+    #
+    # for result in search_gr_res:
+    #     print(result['screen_name'])
+    #     target_group_list.append(result['id'])
+    #
+    # pprint(target_group_list)
+    # pprint(vk.search_groups_by_id(*target_group_list))
 
-    for result in search_gr_res:
-        print(result['screen_name'])
-        target_group_list.append(result['id'])
+    # input("Close?")
 
-    pprint(target_group_list)
-    pprint(vk.search_groups_by_id(*target_group_list))
