@@ -11,9 +11,11 @@ if __name__ == '__main__':
     vk_id = '668524'
     # vk_id = input("Input vk id: \t")
 
+    photo_quant = int(input("Input a quantity of photos: \t"))
+
     photo_lst = (vk.get_photo_f_profile(vk_id))
     if photo_lst != "Error":
-        files_list = file_exchange.format_files_list(photo_lst)
+        files_list = file_exchange.format_files_list(photo_lst, photo_quant)
         pprint(files_list)
 
         y_disc = YaUploader()

@@ -54,28 +54,28 @@ class YaUploader:
         else:
             return f"Error code: {response.status_code}"
 
-    def upload_files_from_local(self, files_list: list, yd_path: str, qtt = 5) -> str:
+    def upload_files_from_local(self, files_list: list, yd_path: str) -> str:
         """Метод загружает файлы по списку file_list на яндекс диск"""
 
         # file_name_ = os.path.basename(file_path)
 
 
-        for idx in range(qtt):
+        for file in files_list:
 
-            new_path = yd_path + "/" + files_list[idx]
+            new_path = yd_path + "/" + file
             print(new_path)
 
             href_json = self.get_uplooad_link(y_disc_file_path=new_path)
             pprint(href_json)
             href = href_json['href']
 
-            response = requests.put(href, data=open(files_list[idx], 'rb'))
+            response = requests.put(href, data=open(file, 'rb'))
 
             # response.raise_for_status()
             time.sleep(0.4)
 
             if response.status_code < 300:
-                print(f"File '{files_list[idx]}' successfully loaded to Yandex Disc.")
+                print(f"File '{file}' successfully loaded to Yandex Disc.")
             else:
                 return f"Error code: {response.status_code}"
 

@@ -3,7 +3,7 @@ import json
 from pprint import pprint
 
 
-def format_files_list(photo_list: dict) -> list:
+def format_files_list(photo_list: dict, qtt: int) -> list:
     """
     Format a list of files_inf_list by template:
         [{
@@ -22,26 +22,33 @@ def format_files_list(photo_list: dict) -> list:
         # Choose a best resolution photo
         max_photo = max(photo['sizes'], key=lambda size: int(size['width']))
 
-        # Solve the file name conflict
         file_name = f"{photo['likes']['count']}.jpeg"
-        counter = 1
-        new_file_name = file_name
-        for file in files_inf_list:
-            if file_name in file['file_name']:
-                new_file_name = f"({counter}){file_name}"
-                counter += 1
 
         # Collect the list of files.
-        files_inf_list.append({'file_name': new_file_name,
+        files_inf_list.append({'file_name': file_name,
                                'url': max_photo['url'],
                                'size': max_photo['type'],
                                'width': max_photo['width']})
 
         # files_list.append(new_file_name)
-    pprint(files_inf_list)
+    # pprint(files_inf_list)
     print("Sort")
     files_inf_list.sort(key=lambda x: int(x['width']))
     files_inf_list.reverse()
+
+    files_inf_list = [files_inf_list[i] for i in range(qtt)]
+
+    # Solve the file name conflict
+    tmp_list = list()
+    for file in files_inf_list:
+        counter = 1
+        new_file_name = file['file_name']
+        if new_file_name in tmp_list:
+            new_file_name = f"({counter}){file['file_name']}"
+            file['file_name'] = new_file_name
+            counter += 1
+        tmp_list.append(new_file_name)
+
     pprint(files_inf_list)
 
     files_list = [i['file_name'] for i in files_inf_list]

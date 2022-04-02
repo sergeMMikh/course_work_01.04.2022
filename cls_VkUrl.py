@@ -106,7 +106,7 @@ class VkUrl:
                               timeout=5)
 
         print(result)
-        # pprint(result.json())
+        pprint(result.json())
 
         if result.status_code == 200 and 'error' not in result.json():
             return result.json()['response']['items']
