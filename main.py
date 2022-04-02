@@ -3,7 +3,7 @@
 from cls_VkUrl import VkUrl
 from pprint import pprint
 # import dload
-
+import requests
 
 if __name__ == '__main__':
 
@@ -20,25 +20,35 @@ if __name__ == '__main__':
             "size": "z"
             }]
         """
+
         for photo in photo_list:
             max_photo = max(photo['sizes'], key=lambda size: int(size['width']))
-            files_list.append({'file_name': f"{photo['likes']['count']}.jpeg",
+            file_name = f"{photo['likes']['count']}.jpeg"
+
+            counter = 1
+            new_file_name = file_name
+            for file in files_list:
+                if file_name in file['file_name']:
+                    new_file_name = f"({counter}){file_name}"
+                    counter += 1
+
+            files_list.append({'file_name': new_file_name,
                                'url': max_photo['url'],
                                'size': max_photo['type']})
-            # print(photo['likes']['count'])
 
         pprint(files_list)
+
 
 
 
         # files_list = list([(max(photo['sizes'], key=lambda size: int(size['width'])))['url'] for photo in photo_list])
         # pprint(files_list)
         # counter = 0
-        # for f in files_list:
-        #     r = requests.get(f)
-        #     counter += 1
-        #     with open(f'{counter}.jpg', 'wb') as f:
-        #         f.write(r.content)
+        for f in files_list:
+            r = requests.get(f['url'])
+            # counter += 1
+            with open(f['file_name'], 'wb') as f:
+                f.write(r.content)
 
     else:
         print(photo_list)
