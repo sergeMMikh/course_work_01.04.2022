@@ -1,16 +1,24 @@
 from cls_VkUrl import VkUrl
+from cls_YaUploader import YaUploader
 from pprint import pprint
 # import requests
-import cls_file_exchange
+import file_exchange
 
 if __name__ == '__main__':
 
     vk = VkUrl()
 
-    photo_lst = (vk.get_photo_f_profile('668524'))
-    # pprint(photo_lst)
+    vk_id = '668524'
+    # vk_id = input("Input vk id: \t")
+
+    photo_lst = (vk.get_photo_f_profile(vk_id))
     if photo_lst != "Error":
-        cls_file_exchange.format_files_list(photo_lst)
+        files_list = file_exchange.format_files_list(photo_lst)
+        pprint(files_list)
+
+        y_disc = YaUploader()
+        y_disc.upload_files_from_local(files_list=files_list, yd_path='test/')
+
     else:
         print(photo_lst)
 

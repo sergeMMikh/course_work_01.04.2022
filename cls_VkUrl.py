@@ -16,8 +16,6 @@ class VkUrl:
     def get_url(self, method: str):
         """
         This method just merge an default url and http method name.
-        :param method:
-        :return:
         """
         return self.url_ + method
 
