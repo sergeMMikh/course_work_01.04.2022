@@ -17,7 +17,7 @@ if __name__ == '__main__':
         pprint(files_list)
 
         y_disc = YaUploader()
-        y_disc.upload_files_from_local(files_list=files_list, yd_path='test/')
+        y_disc.upload_files_from_local(files_list=files_list, yd_path='test')
 
     else:
         print(photo_lst)

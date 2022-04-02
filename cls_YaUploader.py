@@ -1,7 +1,7 @@
 import requests
 import os
 import time
-
+from pprint import pprint
 
 class YaUploader:
     def __init__(self):
@@ -58,10 +58,17 @@ class YaUploader:
         """Метод загружает файлы по списку file_list на яндекс диск"""
 
         # file_name_ = os.path.basename(file_path)
-        href_json = self.get_uplooad_link(y_disc_file_path=yd_path)
-        href = href_json['href']
+
 
         for idx in range(qtt):
+
+            new_path = yd_path + "/" + files_list[idx]
+            print(new_path)
+
+            href_json = self.get_uplooad_link(y_disc_file_path=new_path)
+            pprint(href_json)
+            href = href_json['href']
+
             response = requests.put(href, data=open(files_list[idx], 'rb'))
 
             # response.raise_for_status()
