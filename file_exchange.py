@@ -4,6 +4,7 @@ from pprint import pprint
 import time
 from progress.bar import IncrementalBar
 
+
 def format_files_list(photo_list: dict, qtt: int) -> list:
     """
     Format a list of files_inf_list by template:
@@ -19,7 +20,6 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
     files_inf_list = list()
 
     for photo in photo_list:
-
         # Choose a best resolution photo
         max_photo = max(photo['sizes'], key=lambda size: int(size['width']))
 
@@ -31,11 +31,8 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
                                'size': max_photo['type'],
                                'width': max_photo['width']})
 
-        # files_list.append(new_file_name)
-    # pprint(files_inf_list)
     print("Sort")
     files_inf_list.sort(key=lambda x: int(x['width']), reverse=True)
-    # files_inf_list.reverse()
 
     files_inf_list = [files_inf_list[i] for i in range(qtt)]
 

@@ -22,19 +22,14 @@ class VkUrl:
     def get_params(self, fields: str, pdict: dict):
         """
         This method just merge http request parameters.
-        :param fields:
-        :param pdict:
-        :return:
         """
         return {'access_token': self.TOKEN,
                 'v': '5.81',
                 'fields': fields} | pdict
 
-    def search_groups(self, gr_name: str, sorting=0):
+    def search_groups(self, gr_name: str, sorting=0) -> dict:
         """
-        :param gr_name:
-        :param sorting:
-        :return:
+        Gets data of vk groups by group name.
         """
         result = requests.get(self.get_url(method="groups.search"),
                               params=self.get_params(
@@ -48,11 +43,9 @@ class VkUrl:
 
         return result
 
-    def search_groups_by_id(self, sorting=0, *list_):
+    def search_groups_by_id(self, *list_) -> dict:
         """
-        :param sorting:
-        :param list_:
-        :return:
+        Gets data of vk groups by group id.
         """
         result = requests.get(self.get_url(method="groups.getById"),
                               params=self.get_params(
@@ -60,18 +53,13 @@ class VkUrl:
                                   pdict={'group_ids': ','.join(str(idx) for idx in list_)}),
                               timeout=5)
 
-        print(result)
-
-        # pprint(result.json())
-
         result = result.json()['response']
 
         return result
 
-    def get_personal_data(self, user_id: str):
+    def get_personal_data(self, user_id: str) -> dict:
         """
-        :param user_id:
-        :return: json()
+        Gets a user's data by user id
         """
         result = requests.get(self.get_url(method="users.get"),
                               params=self.get_params(
@@ -79,18 +67,13 @@ class VkUrl:
                                   pdict={'user_ids': user_id}),
                               timeout=5)
 
-        # print(result)
-
         return result.json()
 
     def get_photo_f_profile(self, user_id: str) -> dict | str:
 
         """
-        https://vk.com/dev/photos.get?params[owner_id]=-1&params[album_id]=wall&params[rev]=0&params[extended]=0
-        &params[photo_sizes]=0&params[count]=2&params[v]=5.77
-
+        Gets a user's photos data by user id
         """
-
         owner_id = '-' + user_id
         print(owner_id)
 
