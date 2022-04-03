@@ -88,8 +88,7 @@ class VkUrl:
         """
         https://vk.com/dev/photos.get?params[owner_id]=-1&params[album_id]=wall&params[rev]=0&params[extended]=0
         &params[photo_sizes]=0&params[count]=2&params[v]=5.77
-        :param user_id:
-        :return: dict or str
+
         """
 
         owner_id = '-' + user_id
