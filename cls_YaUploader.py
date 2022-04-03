@@ -26,7 +26,6 @@ class YaUploader:
         url = "https://cloud-api.yandex.net/v1/disk/resources/files"
         headers = self.get_headers()
         response = requests.get(url, headers=headers, timeout=5)
-        print(headers)
 
         return response.json()
 
@@ -68,7 +67,7 @@ class YaUploader:
         """Метод загружает файлы по списку file_list на яндекс диск"""
 
         # Create a new directory
-        print(self.create_dir_link(yd_path))
+        self.create_dir_link(yd_path)
 
         # Upload files to Yandex disc
         with IncrementalBar('Upload files to Yandex disc: ', max=len(files_list)) as bar:
