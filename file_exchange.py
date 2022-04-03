@@ -1,6 +1,5 @@
 import requests
 import json
-from pprint import pprint
 import time
 from progress.bar import IncrementalBar
 
@@ -55,6 +54,7 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
 
             with open(file['file_name'], 'wb') as f:
                 f.write(r.content)
+
             bar.next()
             time.sleep(0.4)
 
@@ -69,7 +69,6 @@ def make_json(files_list: list) -> str:
     Make one json file with information for all photos.
     """
     json_list = [{"file_name": i["file_name"], 'size': i['size']} for i in files_list]
-    pprint(json_list)
 
     with open("Files_info.json", 'w') as f:
         json.dump(json_list, f, ensure_ascii=False, indent=3)
@@ -82,7 +81,6 @@ def make_jsons(files_list: list):
     Make one json file with information for one photo.
     """
     json_list = [{"file_name": i["file_name"], 'size': i['size']} for i in files_list]
-    pprint(json_list)
     files_lst = list()
 
     for file in json_list:

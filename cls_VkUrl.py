@@ -1,5 +1,4 @@
 import requests
-from pprint import pprint
 
 
 class VkUrl:
@@ -11,7 +10,6 @@ class VkUrl:
         """
         with open('my_token.txt', 'r') as t_file:
             self.TOKEN = t_file.read().strip()
-            print(f'TOKEN: {self.TOKEN}')
 
     def get_url(self, method: str):
         """
@@ -74,9 +72,6 @@ class VkUrl:
         """
         Gets a user's photos data by user id
         """
-        owner_id = '-' + user_id
-        print(owner_id)
-
         result = requests.get(self.get_url(method="photos.get"),
                               params=self.get_params(
                                   fields='',
@@ -88,7 +83,6 @@ class VkUrl:
                               timeout=5)
 
         print(result)
-        pprint(result.json())
 
         if result.status_code == 200 and 'error' not in result.json():
             return result.json()['response']['items']

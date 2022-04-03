@@ -11,7 +11,6 @@ class YaUploader:
         """
         with open('ya_token.txt', 'r') as t_file:
             self.token = t_file.read().strip()
-            print(f'TOKEN: {self.token}')
 
     def get_headers(self) -> dict:
         """Метод формирует словарь заголовков"""
@@ -57,7 +56,8 @@ class YaUploader:
         file_name_ = os.path.basename(file_path)
         href_json = self.get_upload_link(y_disc_file_path=yd_path)
         href = href_json['href']
-        response = requests.put(href, data=open(file_path, 'rb'))
+        with open(file_path, 'rb') as data:
+            response = requests.put(href, data=data)
 
         if response.status_code < 300:
             return f"File '{file_name_}' successfully loaded to Yandex Disc."
@@ -78,7 +78,12 @@ class YaUploader:
                 new_path = yd_path + "/" + file
                 href_json = self.get_upload_link(y_disc_file_path=new_path)
                 href = href_json['href']
-                response = requests.put(href, data=open(file, 'rb'))
+
+                with open(file, 'rb') as data:
+                    response = requests.put(href, data=data)
+
+                # Delete files from local disk.
+                os.remove(file)
 
                 bar.next()
 
