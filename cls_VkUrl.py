@@ -1,15 +1,15 @@
 import requests
+from cls_HttpReq import HttpR
 
 
-class VkUrl:
+class VkUrl(HttpR):
     url_ = "https://api.vk.com/method/"
 
-    def __init__(self):
+    def __init__(self, token_file_n: str):
         """
         Here program takes the TOKEN
         """
-        with open('my_token.txt', 'r') as t_file:
-            self.TOKEN = t_file.read().strip()
+        super().__init__(token_file_n)
 
     def get_url(self, method: str):
         """
@@ -21,7 +21,7 @@ class VkUrl:
         """
         This method just merge http request parameters.
         """
-        return {'access_token': self.TOKEN,
+        return {'access_token': self.token,
                 'v': '5.81',
                 'fields': fields} | pdict
 

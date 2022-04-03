@@ -4,7 +4,7 @@ import file_exchange
 
 if __name__ == '__main__':
 
-    vk = VkUrl()
+    vk = VkUrl('my_token.txt')
 
     vk_id = input("Input vk id: \t")
     photo_quant = int(input("Input a quantity of photos: \t"))
@@ -18,7 +18,7 @@ if __name__ == '__main__':
         files_list = file_exchange.format_files_list(photo_lst, photo_quant)
 
         # Upload files to Yandex disk.
-        y_disc = YaUploader()
+        y_disc = YaUploader('ya_token.txt')
         y_disc.upload_files_from_local(files_list=files_list, yd_path=yd_path)
 
     else:

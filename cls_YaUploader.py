@@ -2,15 +2,15 @@ import requests
 import os
 import time
 from progress.bar import IncrementalBar
+from cls_HttpReq import HttpR
 
 
-class YaUploader:
-    def __init__(self):
+class YaUploader(HttpR):
+    def __init__(self, token_file_n: str):
         """
         Here program takes the TOKEN
         """
-        with open('ya_token.txt', 'r') as t_file:
-            self.token = t_file.read().strip()
+        super().__init__(token_file_n)
 
     def get_headers(self) -> dict:
         """Метод формирует словарь заголовков"""
