@@ -61,6 +61,7 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
             f.write(r.content)
         time.sleep(0.4)
 
+    bar.finish()
     files_list.append(make_json(files_inf_list))
     files_list += make_jsons(files_inf_list)
 

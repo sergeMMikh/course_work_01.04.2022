@@ -75,4 +75,6 @@ class YaUploader:
             else:
                 return f"Error code: {response.status_code}"
 
+        bar.finish()
+
         return "All files uploaded successfully."
