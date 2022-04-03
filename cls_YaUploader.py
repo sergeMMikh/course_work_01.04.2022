@@ -41,6 +41,16 @@ class YaUploader:
 
         return responce.json()
 
+    def get_cr_dir_link(self, y_disc_file_path: str) -> dict:
+        """Метод получает ссылку на загрузку файла на яндекс диск"""
+
+        up_url = "https://cloud-api.yandex.net/v1/disk/resources"
+        headers = self.get_headers()
+        params = {"path": y_disc_file_path, "overwrite": "true"}
+        responce = requests.get(up_url, headers=headers, params=params)
+
+        return responce.json()
+
     def upload_from_local(self, file_path: str, yd_path: str) -> str:
         """Метод загружает файлы по списку file_list на яндекс диск"""
 
@@ -56,6 +66,17 @@ class YaUploader:
 
     def upload_files_from_local(self, files_list: list, yd_path: str) -> str:
         """Метод загружает файлы по списку file_list на яндекс диск"""
+
+        # create a new directory
+        url = "https://cloud-api.yandex.net/v1/disk/resources?path=" + yd_path
+        href_json = self.get_uplooad_link(y_disc_file_path=yd_path)
+        print(href_json)
+        # href = href_json['href']
+        # print(f"href: {href}")
+        headers = self.get_headers()
+        response = requests.put(url, headers=headers)
+        print('5')
+        print(response.json())
 
         bar = IncrementalBar('Upload files to Yandex disc: ', max=len(files_list))
         for file in files_list:
