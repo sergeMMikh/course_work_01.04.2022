@@ -9,8 +9,8 @@ class VkUrl:
         """
         Here program takes the TOKEN
         """
-        with open('my_token.txt', 'r') as tfile:
-            self.TOKEN = tfile.read().strip()
+        with open('my_token.txt', 'r') as t_file:
+            self.TOKEN = t_file.read().strip()
             print(f'TOKEN: {self.TOKEN}')
 
     def get_url(self, method: str):

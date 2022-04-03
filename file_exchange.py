@@ -20,7 +20,7 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
     files_inf_list = list()
 
     for photo in photo_list:
-        # Choose a best resolution photo
+        # Choose the best resolution photo
         max_photo = max(photo['sizes'], key=lambda size: int(size['width']))
 
         file_name = f"{photo['likes']['count']}.jpeg"
@@ -31,7 +31,6 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
                                'size': max_photo['type'],
                                'width': max_photo['width']})
 
-    print("Sort")
     files_inf_list.sort(key=lambda x: int(x['width']), reverse=True)
 
     files_inf_list = [files_inf_list[i] for i in range(qtt)]
@@ -47,21 +46,18 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
             counter += 1
         tmp_list.append(new_file_name)
 
-    pprint(files_inf_list)
-
     files_list = [i['file_name'] for i in files_inf_list]
-    pprint(files_list)
 
     # Download files to the local disc.
-    bar = IncrementalBar('Download files to the local disc:', max=len(files_inf_list))
-    for file in files_inf_list:
-        r = requests.get(file['url'])
-        bar.next()
-        with open(file['file_name'], 'wb') as f:
-            f.write(r.content)
-        time.sleep(0.4)
+    with IncrementalBar('Download files to the local disc:', max=len(files_inf_list)) as bar:
+        for file in files_inf_list:
+            r = requests.get(file['url'])
 
-    bar.finish()
+            with open(file['file_name'], 'wb') as f:
+                f.write(r.content)
+            bar.next()
+            time.sleep(0.4)
+
     files_list.append(make_json(files_inf_list))
     files_list += make_jsons(files_inf_list)
 
