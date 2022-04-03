@@ -7,9 +7,6 @@ from cls_HttpReq import HttpR
 
 class YaUploader(HttpR):
     def __init__(self, token_file_n: str):
-        """
-        Here program takes the TOKEN
-        """
         super().__init__(token_file_n)
 
     def get_headers(self) -> dict:
