@@ -1,7 +1,8 @@
 import requests
 import json
 from pprint import pprint
-
+import time
+from progress.bar import IncrementalBar
 
 def format_files_list(photo_list: dict, qtt: int) -> list:
     """
@@ -55,10 +56,13 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
     pprint(files_list)
 
     # Download files to the local disc.
+    bar = IncrementalBar('Download files to the local disc:', max=len(files_inf_list))
     for file in files_inf_list:
         r = requests.get(file['url'])
+        bar.next()
         with open(file['file_name'], 'wb') as f:
             f.write(r.content)
+        time.sleep(0.4)
 
     files_list.append(make_json(files_inf_list))
     files_list += make_jsons(files_inf_list)

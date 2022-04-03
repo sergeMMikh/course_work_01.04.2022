@@ -39,4 +39,4 @@ if __name__ == '__main__':
     # pprint(target_group_list)
     # pprint(vk.search_groups_by_id(*target_group_list))
 
-    # input("Close?")
+    input("Close?")

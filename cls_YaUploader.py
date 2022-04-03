@@ -2,6 +2,7 @@ import requests
 import os
 import time
 from pprint import pprint
+from progress.bar import IncrementalBar
 
 class YaUploader:
     def __init__(self):
@@ -57,25 +58,25 @@ class YaUploader:
     def upload_files_from_local(self, files_list: list, yd_path: str) -> str:
         """Метод загружает файлы по списку file_list на яндекс диск"""
 
-        # file_name_ = os.path.basename(file_path)
-
-
+        bar = IncrementalBar('Upload files to Yandex disc: ', max=len(files_list))
         for file in files_list:
 
             new_path = yd_path + "/" + file
-            print(new_path)
+            # print(new_path)
 
             href_json = self.get_uplooad_link(y_disc_file_path=new_path)
-            pprint(href_json)
+            # pprint(href_json)
             href = href_json['href']
 
             response = requests.put(href, data=open(file, 'rb'))
 
+            bar.next()
             # response.raise_for_status()
             time.sleep(0.4)
 
             if response.status_code < 300:
-                print(f"File '{file}' successfully loaded to Yandex Disc.")
+                pass
+                # print(f"File '{file}' successfully loaded to Yandex Disc.")
             else:
                 return f"Error code: {response.status_code}"
 
