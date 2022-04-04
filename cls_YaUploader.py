@@ -10,7 +10,7 @@ class YaUploader(HttpR):
         super().__init__(token_file_n)
 
     def get_headers(self) -> dict:
-        """Метод формирует словарь заголовков"""
+        """This method forms a list of headers"""
 
         return {
             'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ class YaUploader(HttpR):
         }
 
     def get_files_list(self) -> dict:
-        """Метод получает данные о файлах, уже хранящихся на диске"""
+        """The method receives data about files already stored on the disk"""
 
         url = "https://cloud-api.yandex.net/v1/disk/resources/files"
         headers = self.get_headers()
@@ -27,7 +27,7 @@ class YaUploader(HttpR):
         return response.json()
 
     def get_upload_link(self, y_disc_file_path: str) -> dict:
-        """Метод получает ссылку на загрузку файла на яндекс диск"""
+        """The method receives a link to upload a file to Yandex disk"""
 
         up_url = "https://cloud-api.yandex.net/v1/disk/resources/upload"
         headers = self.get_headers()
@@ -37,8 +37,8 @@ class YaUploader(HttpR):
         return response.json()
 
     def create_dir_link(self, y_disc_file_path: str) -> dict:
-        """Метод создаёт папку на yandex disk.
-        Если указанная папка уже существует, yandex возвращает ошибку"""
+        """The method creates a folder on yandex disk.
+        If the specified folder already exists, yandex just returns an error message"""
 
         url = "https://cloud-api.yandex.net/v1/disk/resources?path=" + y_disc_file_path
         headers = self.get_headers()
@@ -47,7 +47,7 @@ class YaUploader(HttpR):
         return response.json()
 
     def upload_from_local(self, file_path: str, yd_path: str) -> str:
-        """Метод загружает файлы по списку file_list на яндекс диск"""
+        """The method loads file according to the file_list on yandex disk"""
 
         file_name_ = os.path.basename(file_path)
         href_json = self.get_upload_link(y_disc_file_path=yd_path)
@@ -61,7 +61,7 @@ class YaUploader(HttpR):
             return f"Error code: {response.status_code}"
 
     def upload_files_from_local(self, files_list: list, yd_path: str) -> str:
-        """Метод загружает файлы по списку file_list на яндекс диск"""
+        """The method loads files according to the file_list on yandex disk"""
 
         # Create a new directory
         self.create_dir_link(yd_path)

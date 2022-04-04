@@ -1,6 +1,5 @@
 import requests
 from cls_HttpReq import HttpR
-from pprint import pprint
 
 
 class VkUrl(HttpR):

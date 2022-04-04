@@ -44,7 +44,7 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
     for file in files_inf_list:
         new_file_name = file['file_name']
         if new_file_name in tmp_list:
-            new_file_name = f"{photo['likes']['count']}_{file['date']}.jpeg"
+            new_file_name = f"{file['likes']['count']}_{file['date']}.jpeg"
             file['file_name'] = new_file_name
         tmp_list.append(new_file_name)
 

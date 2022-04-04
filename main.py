@@ -1,7 +1,6 @@
 from cls_VkUrl import VkUrl
 from cls_YaUploader import YaUploader
 import file_exchange
-from pprint import pprint
 
 if __name__ == '__main__':
 
