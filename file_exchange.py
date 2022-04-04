@@ -33,6 +33,10 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
 
     files_inf_list.sort(key=lambda x: int(x['width']), reverse=True)
 
+    if len(files_inf_list) < qtt:
+        qtt = len(files_inf_list)
+
+    print(f"qtt: {qtt}")
     files_inf_list = [files_inf_list[i] for i in range(qtt)]
 
     # Solve the file name conflict

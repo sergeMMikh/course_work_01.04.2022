@@ -12,7 +12,7 @@ if __name__ == '__main__':
     yd_path = input("Input a yandex disc directory to save files: \t")
 
     # Get the photo list from user account.
-    photo_lst = (vk.get_photo_f_profile(vk_id), album_name)
+    photo_lst = (vk.get_photo_f_profile(vk_id, album_name))
 
     if photo_lst != "Error":
         # Form the list of files.
