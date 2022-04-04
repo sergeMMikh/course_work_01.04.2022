@@ -1,5 +1,6 @@
 import requests
 from cls_HttpReq import HttpR
+from pprint import pprint
 
 
 class VkUrl(HttpR):
@@ -83,3 +84,17 @@ class VkUrl(HttpR):
             return result.json()['response']['items']
         else:
             return f"Error"
+
+    def search_albums(self, user_id: str) -> dict:
+        """
+        Gets data of vk groups by group name.
+        """
+        result = requests.get(self.get_url(method="photos.getAlbums"),
+                              params=self.get_params(
+                                  fields='',
+                                  pdict={'owner_id': user_id}),
+                              timeout=5)
+
+        result = result.json()
+
+        return result
