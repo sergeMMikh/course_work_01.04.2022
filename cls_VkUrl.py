@@ -64,7 +64,7 @@ class VkUrl(HttpR):
 
         return result.json()
 
-    def get_photo_f_profile(self, user_id: str) -> dict | str:
+    def get_photo_f_profile(self, user_id: str, album_name: str) -> dict | str:
 
         """
         Gets a user's photos data by user id
@@ -73,7 +73,7 @@ class VkUrl(HttpR):
                               params=self.get_params(
                                   fields='',
                                   pdict={'owner_id': user_id,
-                                         'album_id': 'wall',
+                                         'album_id': album_name,
                                          'count': '200',
                                          'photo_sizes': '1',
                                          'extended': '1'}),
