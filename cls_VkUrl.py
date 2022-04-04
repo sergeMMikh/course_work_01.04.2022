@@ -79,8 +79,6 @@ class VkUrl(HttpR):
                                          'extended': '1'}),
                               timeout=5)
 
-        print(result)
-
         if result.status_code == 200 and 'error' not in result.json():
             return result.json()['response']['items']
         else:

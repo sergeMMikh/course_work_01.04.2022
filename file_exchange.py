@@ -9,13 +9,13 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
     Format a list of files_inf_list by template:
         [{
         "file_name": "34.jpg",
+        "data": "data"
         "url": url to download
         "size": "z"
         "width": width of photo
         }]
     Make a list of files (files_list) for next
     """
-
     files_inf_list = list()
 
     for photo in photo_list:
@@ -26,6 +26,7 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
 
         # Collect the list of files.
         files_inf_list.append({'file_name': file_name,
+                               'date': photo['date'],
                                'url': max_photo['url'],
                                'size': max_photo['type'],
                                'width': max_photo['width']})
@@ -37,12 +38,10 @@ def format_files_list(photo_list: dict, qtt: int) -> list:
     # Solve the file name conflict
     tmp_list = list()
     for file in files_inf_list:
-        counter = 1
         new_file_name = file['file_name']
         if new_file_name in tmp_list:
-            new_file_name = f"({counter}){file['file_name']}"
+            new_file_name = f"{file['file_name']}_{file['date']}"
             file['file_name'] = new_file_name
-            counter += 1
         tmp_list.append(new_file_name)
 
     files_list = [i['file_name'] for i in files_inf_list]
