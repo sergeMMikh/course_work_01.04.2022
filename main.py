@@ -16,6 +16,7 @@ if __name__ == '__main__':
     vk_id = input("Input vk id: \t")
     album_name = input("Input a album name: \t")
     photo_quant = int(input("Input a quantity of photos: \t"))
+    y_disc_token = input("Please input your yandex token: \t")
     yd_path = input("Input a yandex disc directory to save files: \t")
 
     # Get the photo list from user account.
@@ -26,7 +27,6 @@ if __name__ == '__main__':
         files_list = file_exchange.format_files_list(photo_lst, photo_quant)
 
         # Upload files to Yandex disk.
-        y_disc_token = input("Please input your yandex token: \t")
         y_disc = YaUploader(y_disc_token)
 
         # to take a token from file
