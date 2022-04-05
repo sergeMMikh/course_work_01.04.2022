@@ -1,6 +1,10 @@
 import requests
 from cls_HttpReq import HttpR
 
+"""
+This is the VKontakte API communication class
+"""
+
 
 class VkUrl(HttpR):
     url_ = "https://api.vk.com/method/"
@@ -86,7 +90,7 @@ class VkUrl(HttpR):
 
     def search_albums(self, user_id: str) -> dict:
         """
-        Gets data of vk groups by group name.
+        Gets albums list.
         """
         result = requests.get(self.get_url(method="photos.getAlbums"),
                               params=self.get_params(
