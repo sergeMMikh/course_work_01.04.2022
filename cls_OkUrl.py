@@ -2,7 +2,7 @@ import requests
 import json
 from cls_HttpReq import HttpR
 import hashlib
-from pprint import pprint
+# from pprint import pprint
 
 """
 This is the Odnoklassniki API communication class
