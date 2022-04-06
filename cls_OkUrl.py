@@ -1,8 +1,10 @@
+import time
 import requests
 import json
 from cls_HttpReq import HttpR
 import hashlib
-from pprint import pprint
+from progress.bar import IncrementalBar
+# from pprint import pprint
 
 """
 This is the Odnoklassniki API communication class
@@ -22,7 +24,7 @@ class OkUrl(HttpR):
 
         with open('ok_data.txt') as f:
             json_data = json.load(f)
-            pprint(json_data)
+            # pprint(json_data)
 
         self.application_iD = json_data['ApplicationID']
         self.public_key = json_data['PublicKey']
@@ -64,7 +66,7 @@ class OkUrl(HttpR):
                                       "access_token": self.token},
                               timeout=5)
 
-        print(result)
+        # print(result)
 
         return result.json()
 
@@ -89,11 +91,11 @@ class OkUrl(HttpR):
                                       "access_token": self.token},
                               timeout=5)
 
-        print(result)
+        # print(result)
 
         return result.json()
 
-    def get_photo_f_profile(self, fid: str) -> dict:
+    def get_photo_f_profile(self, fid: str) -> list:
         """
         Gets a current user's data by user id
         """
@@ -103,7 +105,7 @@ class OkUrl(HttpR):
                            format="json",
                            method='photos.getPhotos' + self.session_secret_key)
 
-        print(f"sig: {sig}")
+        # print(f"sig: {sig}")
 
         result = requests.get(url=self.url_,
                               params={"application_key": self.public_key,
@@ -114,51 +116,62 @@ class OkUrl(HttpR):
                                       "access_token": self.token},
                               timeout=5)
 
-        print(result)
+        # print(result)
 
-        self.get_photo_inf(fid, result.json())
+        result = self.get_photo_inf(result.json())
 
-        return result.json()
+        return result
 
-    def get_photo_inf(self, fid: str, photo_list_json: dict) -> dict:
+    def get_photo_inf(self, photo_list_json: dict) -> list:
         """
         Gets a current user's data by user id
         """
-        print('photo_list_json:')
-        pprint(photo_list_json)
-        print('photo_list:')
+        # print('photo_list_json:')
+        # pprint(photo_list_json)
+        # print('photo_list:')
 
         photo_list = [photo['id'] for photo in photo_list_json['photos']]
 
-        pprint(photo_list)
+        # pprint(photo_list)
 
-        for photo in photo_list:
+        new_list = list()
 
-            # Get a signature.
-            #  application_key=CIMDIKKGDIHBABABAformat=jsonmethod=photos.getPhotoInfophoto_id=915269097285e86663104a0b9e79f081647af1a2ffe2
-            sig = self.get_sig(application_key=self.public_key,
-                               format="json",
-                               method='photos.getPhotoInfo',
-                               photo_id=photo + self.session_secret_key)
+        with IncrementalBar('Get file information:', max=len(photo_list)) as bar:
 
-            print(f"sig: {sig}")
+            for photo in photo_list:
 
-            result = requests.get(url=self.url_,
-                                  params={"application_key": self.public_key,
-                                          "format": "json",
-                                          "method": "photos.getPhotoInfo",
-                                          "photo_id": photo,
-                                          "sig": sig,
-                                          "access_token": self.token},
-                                  timeout=5)
+                # Get a signature.
+                #  application_key=CIMDIKKGDIHBABABAformat=jsonmethod=photos.getPhotoInfophoto_id=915269097285e86663104a0b9e79f081647af1a2ffe2
+                sig = self.get_sig(application_key=self.public_key,
+                                   format="json",
+                                   method='photos.getPhotoInfo',
+                                   photo_id=photo + self.session_secret_key)
 
-            pprint(result)
-            pprint(result.json())
+                # print(f"sig: {sig}")
 
-        # return result.json()
+                result = requests.get(url=self.url_,
+                                      params={"application_key": self.public_key,
+                                              "format": "json",
+                                              "method": "photos.getPhotoInfo",
+                                              "photo_id": photo,
+                                              "sig": sig,
+                                              "access_token": self.token},
+                                      timeout=5)
+
+                # pprint(result)
+                # pprint(result.json())
+                new_list.append(result.json())
+
+                bar.next()
+                time.sleep(0.4)
+
+        return new_list
 
     @staticmethod
-    def format_files_list(photo_list: dict, qtt: int) -> list:
+    def format_files_list(photo_list: list, qtt: int) -> list:
+
+        # print('format_files_list')
+        # pprint(photo_list)
         """
         Format a list of files_inf_list by template:
             [{
@@ -166,10 +179,43 @@ class OkUrl(HttpR):
             "data": "data"
             "url": url to download
             "size": "z"
-            "width": width of photo
             }]
         Make a list of files (files_list) for next
         """
         files_inf_list = list()
+
+        for photo in photo_list:
+            # print('photo')
+            # pprint(photo)
+
+            # Choose the best resolution photo
+            # max_photo = photo['pic640x480']
+
+            file_name = f"{photo['photo']['like_count']}.jpeg"
+
+            # Collect the list of files.
+            files_inf_list.append({'file_name': file_name,
+                                   'likes': photo['photo']['like_count'],
+                                   'date': photo['photo']['id'],
+                                   'url': photo['photo']['pic640x480'],
+                                   'size': '640x480',
+                                   'width': ' '})
+
+        # files_inf_list.sort(key=lambda x: int(x['width']), reverse=True)
+
+        if len(files_inf_list) < qtt:
+            qtt = len(files_inf_list)
+
+        # print(f"qtt: {qtt}")
+        files_inf_list = [files_inf_list[i] for i in range(qtt)]
+
+        # Solve the file name conflict
+        tmp_list = list()
+        for file in files_inf_list:
+            new_file_name = file['file_name']
+            if new_file_name in tmp_list:
+                new_file_name = f"{file['likes']}_{file['date']}.jpeg"
+                file['file_name'] = new_file_name
+            tmp_list.append(new_file_name)
 
         return files_inf_list

@@ -125,6 +125,7 @@ class VkUrl(HttpR):
 
             # Collect the list of files.
             files_inf_list.append({'file_name': file_name,
+                                   'likes': photo['likes']['count'],
                                    'date': photo['date'],
                                    'url': max_photo['url'],
                                    'size': max_photo['type'],
@@ -135,7 +136,7 @@ class VkUrl(HttpR):
         if len(files_inf_list) < qtt:
             qtt = len(files_inf_list)
 
-        print(f"qtt: {qtt}")
+        # print(f"qtt: {qtt}")
         files_inf_list = [files_inf_list[i] for i in range(qtt)]
 
         # Solve the file name conflict
@@ -143,7 +144,7 @@ class VkUrl(HttpR):
         for file in files_inf_list:
             new_file_name = file['file_name']
             if new_file_name in tmp_list:
-                new_file_name = f"{file['likes']['count']}_{file['date']}.jpeg"
+                new_file_name = f"{file['likes']}_{file['date']}.jpeg"
                 file['file_name'] = new_file_name
             tmp_list.append(new_file_name)
 
