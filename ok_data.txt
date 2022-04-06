@@ -1,6 +1,0 @@
-{
-   "ApplicationID": "512001409735",
-   "PublicKey": "CIMDIKKGDIHBABABA",
-   "SecretKey": "D88E365D3A95B7E1B7B761EF",
-   "SessionSecretKey": "e86663104a0b9e79f081647af1a2ffe2"
-}
