@@ -13,6 +13,8 @@ if __name__ == '__main__':
                 break
             case 'v':
                 print("This program takes VK token from file 'vk_token.txt'")
+                print("and Yandex token from file 'yd_token.txt'")
+
                 vk = VkUrl('vk_token.txt')
 
                 vk_id = input("Input vk id: \t")
@@ -36,7 +38,8 @@ if __name__ == '__main__':
                     print(photo_lst)
 
             case 'o':
-                print("This program takes Odnoklassniki token from file 'ok_token.txt'")
+                print("This program takes Odnoklassniki token from file 'ok_token.txt',")
+                print("Yandex token from file 'yd_token.txt'")
                 print("and other authorization data from file 'ok_data.txt'")
                 ok = OkUrl('ok_token.txt')
 

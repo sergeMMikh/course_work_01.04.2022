@@ -23,7 +23,6 @@ class OkUrl(HttpR):
 
         with open('ok_data.txt') as f:
             json_data = json.load(f)
-            # pprint(json_data)
 
         self.application_iD = json_data['ApplicationID']
         self.public_key = json_data['PublicKey']
