@@ -116,7 +116,46 @@ class OkUrl(HttpR):
 
         print(result)
 
+        self.get_photo_inf(fid, result.json())
+
         return result.json()
+
+    def get_photo_inf(self, fid: str, photo_list_json: dict) -> dict:
+        """
+        Gets a current user's data by user id
+        """
+        print('photo_list_json:')
+        pprint(photo_list_json)
+        print('photo_list:')
+
+        photo_list = [photo['id'] for photo in photo_list_json['photos']]
+
+        pprint(photo_list)
+
+        for photo in photo_list:
+
+            # Get a signature.
+            #  application_key=CIMDIKKGDIHBABABAformat=jsonmethod=photos.getPhotoInfophoto_id=915269097285e86663104a0b9e79f081647af1a2ffe2
+            sig = self.get_sig(application_key=self.public_key,
+                               format="json",
+                               method='photos.getPhotoInfo',
+                               photo_id=photo + self.session_secret_key)
+
+            print(f"sig: {sig}")
+
+            result = requests.get(url=self.url_,
+                                  params={"application_key": self.public_key,
+                                          "format": "json",
+                                          "method": "photos.getPhotoInfo",
+                                          "photo_id": photo,
+                                          "sig": sig,
+                                          "access_token": self.token},
+                                  timeout=5)
+
+            pprint(result)
+            pprint(result.json())
+
+        # return result.json()
 
     @staticmethod
     def format_files_list(photo_list: dict, qtt: int) -> list:
