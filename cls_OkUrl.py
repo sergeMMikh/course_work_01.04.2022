@@ -22,12 +22,12 @@ class OkUrl(HttpR):
 
         with open('ok_data.txt') as f:
             json_data = json.load(f)
+            pprint(json_data)
 
         self.application_iD = json_data['ApplicationID']
         self.public_key = json_data['PublicKey']
         self.secret_key = json_data['SecretKey']
         self.session_secret_key = json_data['SessionSecretKey']
-
 
     def get_url(self, method: str):
         """
@@ -43,7 +43,8 @@ class OkUrl(HttpR):
                 'v': '5.81',
                 'fields': fields} | pdict
 
-    def get_sig(self, **kwargs):
+    @staticmethod
+    def get_sig(**kwargs):
         return hashlib.md5("".join([key + '=' + value for key, value in kwargs.items()]).encode('utf-8')).hexdigest()
 
     def get_current_user_personal_data(self) -> dict:
@@ -51,11 +52,11 @@ class OkUrl(HttpR):
         Gets a current user's data by user id
         """
         # Get a signature.
-        sig = self.get_sig(application_key= self.public_key,
-                           format= 'json',
-                           method= 'users.getCurrentUser' + self.session_secret_key)
+        sig = self.get_sig(application_key=self.public_key,
+                           format='json',
+                           method='users.getCurrentUser' + self.session_secret_key)
 
-        result = requests.get(url= self.url_,
+        result = requests.get(url=self.url_,
                               params={"application_key": "CIMDIKKGDIHBABABA",
                                       "format": "json",
                                       "method": "users.getCurrentUser",
@@ -73,12 +74,12 @@ class OkUrl(HttpR):
         """
         # Get a signature.
         fields_ = "FIRST_NAME,PICGIF"
-        sig = self.get_sig(application_key= self.public_key,
-                           fields= fields_,
-                           format= 'json',
-                           method= 'users.getInfoByuid='+ uid + self.session_secret_key)
+        sig = self.get_sig(application_key=self.public_key,
+                           fields=fields_,
+                           format='json',
+                           method='users.getInfoByuid=' + uid + self.session_secret_key)
 
-        result = requests.get(url= self.url_,
+        result = requests.get(url=self.url_,
                               params={"application_key": "CIMDIKKGDIHBABABA",
                                       "fields": "FIRST_NAME,PICGIF",
                                       "format": "json",
@@ -92,23 +93,23 @@ class OkUrl(HttpR):
 
         return result.json()
 
-    def get_photo_f_profile(self, uid: str) -> dict:
+    def get_photo_f_profile(self, fid: str) -> dict:
         """
         Gets a current user's data by user id
         """
         # Get a signature.
-        fields_ = "FIRST_NAME,PICGIF"
-        sig = self.get_sig(application_key= self.public_key,
-                           fields= fields_,
-                           format= 'json',
-                           method= 'users.getInfoByuid='+ uid + self.session_secret_key)
+        sig = self.get_sig(application_key=self.public_key,
+                           fid=fid,
+                           format="json",
+                           method='photos.getPhotos' + self.session_secret_key)
 
-        result = requests.get(url= self.url_,
-                              params={"application_key": "CIMDIKKGDIHBABABA",
-                                      "fields": "FIRST_NAME,PICGIF",
+        print(f"sig: {sig}")
+
+        result = requests.get(url=self.url_,
+                              params={"application_key": self.public_key,
+                                      "fid": fid,
                                       "format": "json",
-                                      "method": "users.getInfoBy",
-                                      "uid": uid,
+                                      "method": "photos.getPhotos",
                                       "sig": sig,
                                       "access_token": self.token},
                               timeout=5)
@@ -117,3 +118,19 @@ class OkUrl(HttpR):
 
         return result.json()
 
+    @staticmethod
+    def format_files_list(photo_list: dict, qtt: int) -> list:
+        """
+        Format a list of files_inf_list by template:
+            [{
+            "file_name": "34.jpg",
+            "data": "data"
+            "url": url to download
+            "size": "z"
+            "width": width of photo
+            }]
+        Make a list of files (files_list) for next
+        """
+        files_inf_list = list()
+
+        return files_inf_list

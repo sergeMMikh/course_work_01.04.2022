@@ -101,3 +101,50 @@ class VkUrl(HttpR):
         result = result.json()
 
         return result
+
+    @staticmethod
+    def format_files_list(photo_list: dict, qtt: int) -> list:
+        """
+        Format a list of files_inf_list by template:
+            [{
+            "file_name": "34.jpg",
+            "data": "data"
+            "url": url to download
+            "size": "z"
+            "width": width of photo
+            }]
+        Make a list of files (files_list) for next
+        """
+        files_inf_list = list()
+
+        for photo in photo_list:
+            # Choose the best resolution photo
+            max_photo = max(photo['sizes'], key=lambda size: int(size['width']))
+
+            file_name = f"{photo['likes']['count']}.jpeg"
+
+            # Collect the list of files.
+            files_inf_list.append({'file_name': file_name,
+                                   'date': photo['date'],
+                                   'url': max_photo['url'],
+                                   'size': max_photo['type'],
+                                   'width': max_photo['width']})
+
+        files_inf_list.sort(key=lambda x: int(x['width']), reverse=True)
+
+        if len(files_inf_list) < qtt:
+            qtt = len(files_inf_list)
+
+        print(f"qtt: {qtt}")
+        files_inf_list = [files_inf_list[i] for i in range(qtt)]
+
+        # Solve the file name conflict
+        tmp_list = list()
+        for file in files_inf_list:
+            new_file_name = file['file_name']
+            if new_file_name in tmp_list:
+                new_file_name = f"{file['likes']['count']}_{file['date']}.jpeg"
+                file['file_name'] = new_file_name
+            tmp_list.append(new_file_name)
+
+        return files_inf_list
