@@ -3,7 +3,6 @@ class HttpR:
         """
         Here program takes the TOKEN
         """
-        # self.token = token_file_n
 
         # to take a token from file
         with open(token_file_n, 'r') as t_file:

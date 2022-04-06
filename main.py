@@ -3,8 +3,6 @@ from cls_OkUrl import OkUrl
 from cls_YaUploader import YaUploader
 import file_exchange
 
-from pprint import pprint
-
 if __name__ == '__main__':
 
     while True:
@@ -14,6 +12,7 @@ if __name__ == '__main__':
             case 'q':
                 break
             case 'v':
+                print("This program takes VK token from file 'vk_token.txt'")
                 vk = VkUrl('vk_token.txt')
 
                 vk_id = input("Input vk id: \t")
@@ -37,23 +36,19 @@ if __name__ == '__main__':
                     print(photo_lst)
 
             case 'o':
+                print("This program takes Odnoklassniki token from file 'ok_token.txt'")
+                print("and other authorization data from file 'ok_data.txt'")
                 ok = OkUrl('ok_token.txt')
-                # ok_user_id = input("Input ok id: \t")
 
                 photo_quant = int(input("Input a quantity of photos: \t"))
                 yd_path = input("Input a yandex disc directory to save files: \t")
+                second_user = input("Input a Odnoklassniki user id: \t")
 
-                second_user = '178218028613'
-                ok_user_id = '586345399786'
-
-                print('Ok result')
                 photo_lst = ok.format_files_list(ok.get_photo_f_profile(fid=second_user), photo_quant)
+
                 # Download files Form the list of files.
                 files_list = file_exchange.download_files(photo_lst)
-
-                pprint(f"files_list: {files_list}")
 
                 # Upload files to Yandex disk.
                 y_disc = YaUploader('yd_token.txt')
                 y_disc.upload_files_from_local(files_list=files_list, yd_path=yd_path)
-
